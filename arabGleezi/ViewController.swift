@@ -35,9 +35,9 @@ class ViewController: UIViewController {
                 if (iChars[i] == "’") { // add or '
                     print ("in")
                     if iChars[i-1] == "7" {
-                        iCharsArabic[i-1] = "خ"
-                        iChars.removeLast()
-                        iChars.append("")
+                        iChars[i] = "5"
+                        iCharsArabic[i-1] = "\0"
+                        iChars[i-1] = "\0"
                     }
                 }
                 iChars[i] == "7" ? iCharsArabic[i] = "ح" : nil // also h
@@ -72,6 +72,11 @@ class ViewController: UIViewController {
                  "gh" "3'" => غ
                  "a" "e" "eh" "at" "et" => ة
                  */
+                
+                /*iCharsArabic[i-1] = "خ"
+                 iCharsArabic[i] = "\0"
+                 iChars[i] = "\0"*/
+                //might be useful for other letters
             }
             
             userOutput.text = String(iCharsArabic)
