@@ -39,6 +39,22 @@ class ViewController: UIViewController {
                         iCharsArabic[i-1] = "\0"
                         iChars[i-1] = "\0"
                     }
+                    if iChars[i-1] == "3" {
+                        iCharsArabic[i] = "غ"
+                        iCharsArabic[i-1] = "\0"
+                        iChars[i-1] = "\0"
+                    }
+                    if iChars[i-1] == "9" {
+                        iCharsArabic[i] = "ض"
+                        iCharsArabic[i-1] = "\0"
+                        iChars[i-1] = "\0"
+                    }
+                    if iChars[i-1] == "6" {
+                        iCharsArabic[i] = "ظ"
+                        iCharsArabic[i-1] = "\0"
+                        iChars[i-1] = "\0"
+                    }
+                    
                 }
                 iChars[i] == "7" ? iCharsArabic[i] = "ح" : nil // also h
                 iChars[i] == "5" ? iCharsArabic[i] = "خ" : nil  // "kh" "7'"
@@ -67,9 +83,9 @@ class ViewController: UIViewController {
                 
                 /*
                  "sh" or "ch" => ش
-                 "9'" "dh" "d" => ض
-                 "z" "th" "dh" "6'" => ظ
-                 "gh" "3'" => غ
+                 "dh" "d" => ض
+                 "z" "th" "dh" => ظ
+                 "gh" => غ
                  "a" "e" "eh" "at" "et" => ة
                  */
                 
@@ -77,6 +93,7 @@ class ViewController: UIViewController {
                  iCharsArabic[i] = "\0"
                  iChars[i] = "\0"*/
                 //might be useful for other letters
+                // spacing issues for the nulls
             }
             
             userOutput.text = String(iCharsArabic)
