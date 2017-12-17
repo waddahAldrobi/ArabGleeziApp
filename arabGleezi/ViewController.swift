@@ -77,12 +77,29 @@ class ViewController: UIViewController {
                 iChars[i] == "k" ? iCharsArabic[i] = "ك" : nil  // maybe g ?
                 iChars[i] == "l" ? iCharsArabic[i] = "ل" : nil
                 iChars[i] == "n" ? iCharsArabic[i] = "ن" : nil
-                (iChars[i] == "h") ? iCharsArabic[i] = "ه" : nil // ## e,ah and eh , maybe a
+                
+                if (iChars[i] == "h") {
+                    if(i>0){
+                        if (iChars[i-1] == "s" || iChars[i-1] == "c" ){
+                            iCharsArabic[i] = "ش"
+                            iCharsArabic[i-1] = "\0"
+                            iChars[i-1] = "\0"
+                        }
+                        else{
+                            iCharsArabic[i] = "ه"
+                            }
+                    }
+                    
+                    else{
+                    iCharsArabic[i] = "ه" // ## e,ah and eh , maybe a
+                    }
+                    
+                }
                 (iChars[i] == "w" || iChars[i] == "u") ? iCharsArabic[i] = "و" : nil //ou oo, maybe o
                 (iChars[i] == "y" || iChars[i] == "i") ? iCharsArabic[i] = "ي" : nil //ee ei ai, maybe a
                 
                 /*
-                 "sh" or "ch" => ش
+                 "ch" => ش
                  "dh" "d" => ض
                  "z" "th" "dh" => ظ
                  "gh" => غ
