@@ -26,52 +26,32 @@ class ViewController: UIViewController {
         }
         else{  //figure out how to do extra letter, and start determining location of letter in word
             while (i < strLength){
-                
                 switch iChars[i] {
-                case "7" :
-                    iCharsArabic[i] = "ح" // also h
-                case "5" :
-                    iCharsArabic[i] = "خ" // "kh" "7'"
-                case "d" :
-                    iCharsArabic[i] = "د"
-                case "z" :
-                    iCharsArabic[i] = "ذ" // "th" "dh"  ## z can be ز
-                case "r" :
-                    iCharsArabic[i] = "ر"
-                case "s" :
-                    iCharsArabic[i] = "س"
-                case "9" :
-                    iCharsArabic[i] = "ص" // ## can also be s
-                case "6" :
-                    iCharsArabic[i] = "ط" // ## can also be t
-                case "o","O","3":
-                    iCharsArabic[i] = "ع"
-                case "f","v":
-                    iCharsArabic[i] = "ف"
-                case "m" :
-                    iCharsArabic[i] = "م"
-                case "8","q" :
-                    iCharsArabic[i] = "ق" // ## g and 2 too
-                case "k" :
-                    iCharsArabic[i] = "ك" // maybe g
-                case "l" :
-                    iCharsArabic[i] = "ل"
-                case "n" :
-                    iCharsArabic[i] = "ن"
-                case "w","u" :
-                    iCharsArabic[i] = "و" //ou oo, maybe o
-                case "y","i" :
-                    iCharsArabic[i] = "ي" //ee ei ai, maybe a
-                case "a","e" :
-                    iCharsArabic[i] = "ا"
-                case "2" ://ء أ آ ؤ إ ئ
-                    iCharsArabic[i] = "أ"
-                case "b","p" :
-                    iCharsArabic[i] = "ب"
-                case "t" :
-                    iCharsArabic[i] = "ت"
-                case "j","g" :
-                    iCharsArabic[i] = "ج" // "dj"
+                case "7" :     iCharsArabic[i] = "ح" // also h
+                case "5" :     iCharsArabic[i] = "خ"
+                case "d" :     iCharsArabic[i] = "د"
+                case "z" :     iCharsArabic[i] = "ز"
+                case "r" :     iCharsArabic[i] = "ر"
+                case "s" :     iCharsArabic[i] = "س"
+                case "9" :     iCharsArabic[i] = "ص" // ## can also be s
+                case "6" :     iCharsArabic[i] = "ط" // ## can also be t
+                case "f","v":  iCharsArabic[i] = "ف"
+                case "m" :     iCharsArabic[i] = "م"
+                case "3" :     iCharsArabic[i] = "ع"
+                case "8","q" : iCharsArabic[i] = "ق" // ## g and 2 too
+                case "k" :     iCharsArabic[i] = "ك" // maybe g
+                case "l" :     iCharsArabic[i] = "ل"
+                case "n" :     iCharsArabic[i] = "ن"
+                case "w","u" : iCharsArabic[i] = "و" //ou oo, maybe o
+                case "y","i" : iCharsArabic[i] = "ي" // ai, maybe a
+                case "a" :     iCharsArabic[i] = "ا"
+                case "b","p" : iCharsArabic[i] = "ب"
+                case "t" :     iCharsArabic[i] = "ت"
+                case "j","g" : iCharsArabic[i] = "ج" // "dj"
+                case "?" :     iCharsArabic[i] = "؟"
+                case "," :     iCharsArabic[i] = "،"
+                                /*ء أ آ ؤ إ ئ */
+                case "2" :     iCharsArabic[i] = "أ"
                 
                 case "h" :
                     if(i>0){
@@ -86,13 +66,14 @@ class ViewController: UIViewController {
                             iChars[i-1] = "\0"
                         case "g" :
                             iCharsArabic[i-1] = "غ"
-                            iCharsArabic.remove(at: i)
-                            iChars.remove(at: i)
-                            //i = i + 1
-                            //iCharsArabic[i-1] = "\0"
-                            //iChars[i-1] = "\0"
+                            iCharsArabic[i-1] = "\0"
+                            iChars[i-1] = "\0"
                         case "e" :
                             iCharsArabic[i] = "ة"
+                            iCharsArabic[i-1] = "\0"
+                            iChars[i-1] = "\0"
+                        case "k" :
+                            iCharsArabic[i] = "خ"
                             iCharsArabic[i-1] = "\0"
                             iChars[i-1] = "\0"
                         default:
@@ -103,12 +84,11 @@ class ViewController: UIViewController {
                         iCharsArabic[i] = "ه" // ## e,ah and eh , maybe a
                     }
                     
-                case "’" :
+                case "’","'" :
+                    if(i>0){
                     switch iChars[i-1] {
-                    case "7" : // this is broken FIX!
-                        iCharsArabic[i-1] = "خ"
-                        iCharsArabic.remove(at: i)
-                        iChars.remove(at: i)
+                    case "7" :
+                        iCharsArabic[i] = "خ"
                         iCharsArabic[i-1] = "\0"
                         iChars[i-1] = "\0"
                     case "3" :
@@ -126,14 +106,51 @@ class ViewController: UIViewController {
                     default:
                         iCharsArabic[i] = "'"
                     }
+                }
+                    
+                case "e" :
+                    if(i>0){
+                    switch iChars[i-1] {
+                    case "e" , "i" :
+                        iCharsArabic[i] = "ي"
+                        iCharsArabic[i-1] = "\0"
+                        iChars[i-1] = "\0"
+                    default:
+                        iCharsArabic[i] = "ا"
+                    }
+                  }
+                    else{
+                        iCharsArabic[i] = "ا"
+                    }
+                    
+                 case "o","O" :
+                    if(i>0){
+                        switch iChars[i-1] {
+                        case "o","u" :
+                            iCharsArabic[i] = "و"
+                            iCharsArabic[i-1] = "\0"
+                            iChars[i-1] = "\0"
+                        default:
+                            iCharsArabic[i] = "ع"
+                        }
+                    }
+                    else{
+                        iCharsArabic[i] = "ع"
+                    }
 
                 default:
                     print ("none")
                     
                 }
-           
-                // figure out spacing issue
+                
+                // In the case of duplicates
+                if (i>0 && iChars[i-1]==iChars[i]){
+                    iCharsArabic[i] = "\0"
+                    iChars[i] = "\0"
+                }
+        
                 //iChars[i] == "s" ? iCharsArabic[i] = "ث" : nil // iChars[i] ="th" if statement
+                // "th" "dh" "z" for ذ
                 
                 /*
                  "d" "dh" => ض
@@ -146,6 +163,8 @@ class ViewController: UIViewController {
                 i = i + 1
             }
             
+            // Awesome functions that filters out the nulls for me <3s
+            iCharsArabic = iCharsArabic.filter{$0 != "\0"}
             userOutput.text = String(iCharsArabic)
         }
     }
@@ -157,6 +176,7 @@ class ViewController: UIViewController {
      print (iChars[i-1])
      }
     }*/
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
