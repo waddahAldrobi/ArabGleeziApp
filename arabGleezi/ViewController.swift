@@ -21,11 +21,13 @@ class ViewController: UIViewController {
         
         //var wordsArr = userOutput.text?.split(separator: " ")
         var i = 0
-        if (strLength <= 0){
+        if (strLength < 1){
             userOutput.text = ""
+            //print(i)
         }
         else{  //figure out how to do extra letter, and start determining location of letter in word
-            while (i < strLength){
+            for i in i..<strLength {
+                //i > 0 ? print(i) : nil
                 switch iChars[i] {
                 case "7" :     iCharsArabic[i] = "ح" // also h
                 case "5" :     iCharsArabic[i] = "خ"
@@ -176,7 +178,7 @@ class ViewController: UIViewController {
                 
                 //print(i)
                 //print ("str " + String(strLength) )
-                i = i + 1
+                //i = i + 1
             }
             
             // Awesome functions that filters out the nulls for me <3s
@@ -224,9 +226,9 @@ class ViewController: UIViewController {
             word2 = String(wordArr2)
             word3 = String(wordArr3)
             
-            print (word)
-            print (word2)
-            print (word3)
+//            print (word)
+//            print (word2)
+//            print (word3)
         }
         // Ends here 
     }
