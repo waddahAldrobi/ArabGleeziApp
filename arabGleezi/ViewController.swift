@@ -12,6 +12,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var userInput: UITextField!
     @IBOutlet weak var userOutput: UILabel!
     var strLength = 0
+    var word = ""
+    var word2 = ""
+    var word3 = ""
+ 
     @IBAction func isEditing(_ sender: Any) {
         userOutput.text = userInput.text
         strLength = userInput.text?.count ?? 0
@@ -195,9 +199,7 @@ class ViewController: UIViewController {
             var wordArr = [Character]()
             var wordArr2 = [Character]()
             var wordArr3 = [Character]()
-            var word = ""
-            var word2 = ""
-            var word3 = ""
+            
             while (y < iCharsStringArr.count){
                 wordArr = Array(iCharsStringArr[y])
                 wordArr2 = Array(iCharsStringArr[y])
@@ -230,22 +232,102 @@ class ViewController: UIViewController {
 //            print (word2)
 //            print (word3)
         }
-        // Ends here 
+        // Ends here
+        /* func trasnlate (iChars: [String]){
+         later implement*/
+        self.button1.title = word
+        self.button2.title = word2
+        self.button3.title = word3
     }
+    
+    //Comment the shit out of here
+    // Disable the mid button when it's blank
+    // Look into copy paste functions before going forward
+    
+    @IBOutlet weak var toolBar: UIToolbar!
+    @IBOutlet weak var toolbarBottomConstraint: NSLayoutConstraint!
+    var toolbarBottomConstraintInitialValue = CGFloat()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+       
     }
-
+    override func viewDidAppear(_ animated: Bool) {
+        enableKeyboardHideOnTap()
+        toolbarBottomConstraint.constant = 0
+        self.toolbarBottomConstraintInitialValue = toolbarBottomConstraint.constant
+        print("first")
+        print (toolbarBottomConstraint.constant)
+        
+        if (toolbarBottomConstraint.constant == 0){
+            self.button1.title = "Copy"
+            self.button2.title = ""
+            self.button3.title = "Paste"
+            
+        }
+        
+    }
     
-    /* func trasnlate (iChars: [String]){
-     later implement
-     
-     if (iChars[i] == " "){
-     print (iChars[i-1])
-     }
-     }*/
+    private func enableKeyboardHideOnTap() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.hideKeyboard))
+        
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification)
+    {
+        //print ("in")
+        let info = notification.userInfo!
+        
+        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.toolbarBottomConstraint.constant = keyboardFrame.size.height
+            
+            //self.toolBar.isHidden = false
+            self.view.layoutIfNeeded()
+        }
+//        print("second")
+//        print (toolbarBottomConstraint.constant)
+        
+    }
+    
+    @objc func keyboardWillHide(notification : NSNotification){
+//        print("out")
+        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.toolbarBottomConstraint.constant = self.toolbarBottomConstraintInitialValue
+            
+            //self.toolBar.isHidden = true
+            self.view.layoutIfNeeded()
+        }
+//        print("last")
+//        print (toolbarBottomConstraint.constant)
+        self.button1.title = "Copy"
+        self.button2.title = ""
+        self.button3.title = "Paste"
+    }
+    
+    @objc func hideKeyboard(){
+        self.view.endEditing(true)
+    }
+    
+    @IBOutlet weak var button1: UIBarButtonItem!
+    @IBOutlet weak var button2: UIBarButtonItem!
+    @IBOutlet weak var button3: UIBarButtonItem!
+    
+    
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
