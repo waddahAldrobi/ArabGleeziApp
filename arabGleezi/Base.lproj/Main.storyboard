@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina5_9" orientation="portrait">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,7 +15,7 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="arabGleezi" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter here..." minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Sa5-4m-Up1">
@@ -36,16 +36,24 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlq-Iq-0yy">
-                                <rect key="frame" x="0.0" y="727" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="685" width="414" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Qcg-ga-Tlh"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="Copy" id="LPo-W8-Ivv"/>
+                                    <barButtonItem title="Copy" id="LPo-W8-Ivv">
+                                        <connections>
+                                            <action selector="button1Tapped:" destination="BYZ-38-t0r" id="fYY-Oq-azf"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="88Y-Ms-uvY"/>
                                     <barButtonItem title="Item" id="bwF-bR-N2t"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="8Z3-wx-0yS"/>
-                                    <barButtonItem title="Paste" id="xuf-c9-xOm"/>
+                                    <barButtonItem title="Paste" id="xuf-c9-xOm">
+                                        <connections>
+                                            <action selector="button3Tapped:" destination="BYZ-38-t0r" id="hlb-Ch-cmD"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -61,7 +69,6 @@
                         <outlet property="button1" destination="LPo-W8-Ivv" id="rpE-4N-fVa"/>
                         <outlet property="button2" destination="bwF-bR-N2t" id="XI7-Pc-VDU"/>
                         <outlet property="button3" destination="xuf-c9-xOm" id="0ZE-mf-596"/>
-                        <outlet property="toolBar" destination="rlq-Iq-0yy" id="JIN-ot-Cik"/>
                         <outlet property="toolbarBottomConstraint" destination="yDo-4U-Non" id="Xnj-ja-b5a"/>
                         <outlet property="userInput" destination="Sa5-4m-Up1" id="Zak-nN-lG4"/>
                         <outlet property="userOutput" destination="QP5-JE-bAO" id="5tF-4R-w8V"/>

@@ -28,6 +28,9 @@ class ViewController: UIViewController {
         if (strLength < 1){
             userOutput.text = ""
             //print(i)
+            self.button1.title = "Copy"
+            self.button2.title = ""
+            self.button3.title = "Paste"
         }
         else{  //figure out how to do extra letter, and start determining location of letter in word
             for i in i..<strLength {
@@ -231,13 +234,13 @@ class ViewController: UIViewController {
 //            print (word)
 //            print (word2)
 //            print (word3)
+            self.button1.title = word
+            self.button2.title = word2
+            self.button3.title = word3
         }
         // Ends here
         /* func trasnlate (iChars: [String]){
          later implement*/
-        self.button1.title = word
-        self.button2.title = word2
-        self.button3.title = word3
     }
     
     //Comment the shit out of here
@@ -325,8 +328,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var button2: UIBarButtonItem!
     @IBOutlet weak var button3: UIBarButtonItem!
     
+    @IBAction func button1Tapped(_ sender: Any) {
+        print("Button1 tapped")
+        if (button1.title == "Copy"){
+            UIPasteboard.general.string = userOutput.text!
+        }
+    }
     
     
+    
+    @IBAction func button3Tapped(_ sender: Any) {
+        print("Button3 tapped")
+        if (button1.title == "Paste"){  //paste still requires an enter, solve 
+        userInput.text = UIPasteboard.general.string
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
