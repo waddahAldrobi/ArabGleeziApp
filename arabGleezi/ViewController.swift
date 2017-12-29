@@ -15,23 +15,32 @@ class ViewController: UIViewController {
     var word = ""
     var word2 = ""
     var word3 = ""
+    var iCharsStringArr = [String]()
+    var y = 0
+    var s = 0
+    var iCharsString = ""
+    var iCharsArabic = [Character]()
+    
+    var wordArr = [Character]()
+    var wordArr2 = [Character]()
+    var wordArr3 = [Character]()
+    
+    var isTapped = false
  
     @IBAction func isEditing(_ sender: Any) {
         userOutput.text = userInput.text
         strLength = userInput.text?.count ?? 0
         var iChars = Array(userInput.text!)
-        var iCharsArabic = Array(userInput.text!)
-        var iCharsString = ""
+        iCharsArabic = Array(userInput.text!)
         
         //Will turn the english into arabic
-        translate (iChars: &iChars , iCharsArabic: &iCharsArabic)
+        //if (!isTapped) {
+            translate (iChars: &iChars , iCharsArabic: &iCharsArabic)
+        //}
         
         if (strLength < 1){
             userOutput.text = ""
-            //print(i)
-            self.button1.title = "Copy"
-            self.button2.title = ""
-            self.button3.title = "Paste"
+            setCopyandPaste()
         }
         else{  //figure out how to do extra letter, and start determining location of letter in word
             
@@ -39,17 +48,14 @@ class ViewController: UIViewController {
             // Awesome functions that filters out the nulls for me <3s
             iCharsArabic = iCharsArabic.filter{$0 != "\0"}
             
-            // All the following is the suggestions options
-            iCharsString = String(iCharsArabic)
-            var iCharsStringArr = [String]()
+            // All the following is the predictive bar suggestions
+            iCharsString = String(iChars)
             iCharsStringArr = iCharsString.components(separatedBy: " ")
             
-            var wordArr = [Character]()
-            var wordArr2 = [Character]()
-            var wordArr3 = [Character]()
+            
             
             // Sets the words that will be filtered
-            var y = 0
+            y = 0
             while (y < iCharsStringArr.count){
                 wordArr = Array(iCharsStringArr[y])
                 wordArr2 = Array(iCharsStringArr[y])
@@ -59,7 +65,7 @@ class ViewController: UIViewController {
             }
             
             // Filters out letters to be filtered
-            var s = 0
+            s = 0
             while (s < wordArr.count){
                 if (s != 0 && wordArr[s] == "ا"){
                     //wordArr[s] = "\0"
@@ -83,7 +89,9 @@ class ViewController: UIViewController {
             self.button2.title = word2
             self.button3.title = word3
             
+ 
             userOutput.text = String(iCharsStringArr.joined(separator: " "))
+            //isTapped = false
         }
         // Ends here
         /* func trasnlate (iChars: [String]){
@@ -106,14 +114,9 @@ class ViewController: UIViewController {
         enableKeyboardHideOnTap()
         toolbarBottomConstraint.constant = 0
         self.toolbarBottomConstraintInitialValue = toolbarBottomConstraint.constant
-        print("first")
-        print (toolbarBottomConstraint.constant)
         
         if (toolbarBottomConstraint.constant == 0){
-            self.button1.title = "Copy"
-            self.button2.title = ""
-            self.button3.title = "Paste"
-            
+          setCopyandPaste()
         }
     }
     
@@ -150,9 +153,7 @@ class ViewController: UIViewController {
             self.toolbarBottomConstraint.constant = self.toolbarBottomConstraintInitialValue
             self.view.layoutIfNeeded()
         }
-        self.button1.title = "Copy"
-        self.button2.title = ""
-        self.button3.title = "Paste"
+       setCopyandPaste()
     }
     
     // Not sure what it does
@@ -178,10 +179,28 @@ class ViewController: UIViewController {
         if (button1.title == "Paste"){  //paste does not work properly, will be investigated
         userInput.text = UIPasteboard.general.string
         }
+        else{
+            //print(y-1)
+            iCharsStringArr[y-1] = word3
+            iCharsArabic[strLength-1] = wordArr3[s-1]
+            userOutput.text = String(iCharsStringArr.joined(separator: " "))
+            
+            print ("w: " + String(wordArr3[s-1]))
+            print ("c: " + String(iCharsArabic[strLength-1]))
+            
+            print(iCharsStringArr[y-1])
+            //isTapped = true;
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func setCopyandPaste() {
+        self.button1.title = "Copy"
+        self.button2.title = ""
+        self.button3.title = "Paste"
     }
     
     func translate ( iChars: inout [Character] , iCharsArabic: inout [Character] )  {
@@ -189,7 +208,7 @@ class ViewController: UIViewController {
         for i in i..<strLength {
             //i > 0 ? print(i) : nil
             switch iChars[i] {
-            case "7" :     iCharsArabic[i] = "ح" // also h
+            case "7" :     iChars[i] = "ح" // also h
             case "5" :     iCharsArabic[i] = "خ"
             case "d" :     iCharsArabic[i] = "د"
             case "z" :     iCharsArabic[i] = "ز"
