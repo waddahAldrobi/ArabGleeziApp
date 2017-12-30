@@ -49,7 +49,7 @@ class ViewController: UIViewController {
             iCharsArabic = iCharsArabic.filter{$0 != "\0"}
             
             // All the following is the predictive bar suggestions
-            iCharsString = String(iChars)
+            iCharsString = String(iCharsArabic)
             iCharsStringArr = iCharsString.components(separatedBy: " ")
             
             
@@ -94,13 +94,10 @@ class ViewController: UIViewController {
             //isTapped = false
         }
         // Ends here
-        /* func trasnlate (iChars: [String]){
-         later implement*/
     }
     
     //Comment the shit out of here
     // Disable the mid button when it's blank
-    // Look into copy paste functions before going forward
     
     @IBOutlet weak var toolBar: UIToolbar!
     @IBOutlet weak var toolbarBottomConstraint: NSLayoutConstraint!
@@ -181,6 +178,8 @@ class ViewController: UIViewController {
         }
         else{
             //print(y-1)
+            print("str: " + String(strLength))
+            print("s: " + String(s))
             iCharsStringArr[y-1] = word3
             iCharsArabic[strLength-1] = wordArr3[s-1]
             userOutput.text = String(iCharsStringArr.joined(separator: " "))
@@ -208,7 +207,8 @@ class ViewController: UIViewController {
         for i in i..<strLength {
             //i > 0 ? print(i) : nil
             switch iChars[i] {
-            case "7" :     iChars[i] = "ح" // also h
+            case "ؤ" :     iCharsArabic[i] = "ؤ"
+            case "7" :     iCharsArabic[i] = "ح" // also h
             case "5" :     iCharsArabic[i] = "خ"
             case "d" :     iCharsArabic[i] = "د"
             case "z" :     iCharsArabic[i] = "ز"
