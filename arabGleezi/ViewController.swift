@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var userInput: UITextField!
     @IBOutlet weak var userOutput: UILabel!
     var strLength = 0
@@ -27,27 +27,42 @@ class ViewController: UIViewController {
     
     var tapped = "1"
     
+    var spacePressed = false
+    
+    // This function
+    
     @IBAction func isEditing(_ sender: Any) {
+        //print(userInput.text)
+        
         let userInputString = Array(userInput.text! as String)
+        strLength = userInputString.count
+        var tempArr = userInput.text?.split(separator: " ")
+        
+        var tempIndex = Int(tempArr!.count)
+//        var tempIndexLen = tempArr![tempIndex-1].count
+//        print (tempIndexLen-1)
+        
         //if the user clicks a space, autmatically insert button three's character
         if (userInputString.count == 0){
             userInput.text = ""
         }
-        else if userInputString[(userInputString.count) - 1] == " " {
+            // ### This where the problem is the space is making it tap
+        else if spacePressed{
+            spacePressed = false
             if tapped == "1"{button1Tapped(self)}
-            else if tapped == "3"{button3Tapped(self)}
+            else if tapped == "3"{button3Tapped(self); tapped="1"}
             
             userInput.text?.append(" ")
         }
             // for normal words
         else {
+//            print(userInputString.count)
             //setup for recognizing only last word of userInput
             let temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")
             
             strLength = userInput.text?.count ?? 0
             iCharsArabic = Array(String(temp1[temp1.count-1]))
-            
             translate (iCharsArabic: &iCharsArabic)
             
             if (strLength < 1){
@@ -111,8 +126,18 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        userInput.delegate = self
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string == " " {
+            //Run your function here
+            print("SpaceBar is pressed")
+            spacePressed = true
+        }
+        return true
+    }
+    
     // this just makes the predictive bar
     override func viewDidAppear(_ animated: Bool) {
         enableKeyboardHideOnTap()
@@ -178,7 +203,8 @@ class ViewController: UIViewController {
             tapped = "1"
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-            temp1.remove(at: (temp1.count - 1))
+            //Keeps it from breaking 
+            if temp1.count != 0 { temp1.remove(at: (temp1.count - 1))}
             temp1.append(Substring(word))
             userInput.text = String(temp1.joined(separator: " "))
         }
