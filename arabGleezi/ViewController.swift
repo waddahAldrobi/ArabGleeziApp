@@ -25,95 +25,102 @@ class ViewController: UIViewController {
     var wordArr2 = [Character]()
     var wordArr3 = [Character]()
     
-    var isTapped = false
- 
+    var tapped = "1"
+    
     @IBAction func isEditing(_ sender: Any) {
-        userOutput.text = userInput.text
-        strLength = userInput.text?.count ?? 0
-        var iChars = Array(userInput.text!)
-        iCharsArabic = Array(userInput.text!)
-        
-        //Will turn the english into arabic
-        //if (!isTapped) {
-            translate (iChars: &iChars , iCharsArabic: &iCharsArabic)
-        //}
-        
-        if (strLength < 1){
-            userOutput.text = ""
-            setCopyandPaste()
+        let userInputString = Array(userInput.text! as String)
+        //if the user clicks a space, autmatically insert button three's character
+        if (userInputString.count == 0){
+            userInput.text = ""
         }
-        else{  //figure out how to do extra letter, and start determining location of letter in word
+        else if userInputString[(userInputString.count) - 1] == " " {
+            if tapped == "1"{button1Tapped(self)}
+            else if tapped == "3"{button3Tapped(self)}
             
+            userInput.text?.append(" ")
+        }
+            // for normal words
+        else {
+            //setup for recognizing only last word of userInput
+            let temp = userInput.text! as String
+            var temp1 = temp.split(separator: " ")
             
-            // Awesome functions that filters out the nulls for me <3s
-            iCharsArabic = iCharsArabic.filter{$0 != "\0"}
+            strLength = userInput.text?.count ?? 0
+            iCharsArabic = Array(String(temp1[temp1.count-1]))
             
-            // All the following is the predictive bar suggestions
-            iCharsString = String(iCharsArabic)
-            iCharsStringArr = iCharsString.components(separatedBy: " ")
+            translate (iCharsArabic: &iCharsArabic)
             
-            
-            
-            // Sets the words that will be filtered
-            y = 0
-            while (y < iCharsStringArr.count){
-                wordArr = Array(iCharsStringArr[y])
-                wordArr2 = Array(iCharsStringArr[y])
-                wordArr3 = Array(iCharsStringArr[y])
-                
-                y = y + 1
+            if (strLength < 1){
+                userOutput.text = ""
+                setCopyandPaste()
             }
-            
-            // Filters out letters to be filtered
-            s = 0
-            while (s < wordArr.count){
-                if (s != 0 && wordArr[s] == "ا"){
-                    //wordArr[s] = "\0"
-                    wordArr2[s] = "ى"
-                    wordArr3[s] = "ؤ"
+            else{  //figure out how to do extra letter, and start determining location of letter in word
+                
+                
+                // Awesome functions that filters out the nulls for me
+                iCharsArabic = iCharsArabic.filter{$0 != "\0"}
+                
+                // All the following is the predictive bar suggestions
+                iCharsString = String(iCharsArabic)
+                iCharsStringArr = iCharsString.components(separatedBy: " ")
+                
+                let iCharsArabicString = String(iCharsArabic)
+                var wordArray = iCharsArabicString.split(separator: " ")
+                let lastWord = Array(wordArray[wordArray.count-1])
+                
+                (wordArr, wordArr2, wordArr3) = (lastWord, lastWord, lastWord)
+                
+                
+                // Filters out letters to be filtered
+                s = 0
+                while (s < wordArr.count){
+                    if (s != 0 && wordArr[s] == "ا"){
+                        //wordArr[s] = "\0"
+                        wordArr2[s] = "ى"
+                        wordArr3[s] = "ؤ"
+                    }
+                    
+                    s = s + 1
                 }
                 
-                s = s + 1
+                // Filters and turns to strings
+                wordArr = wordArr.filter{$0 != "\0"}
+                wordArr2 = wordArr2.filter{$0 != "\0"}
+                wordArr3 = wordArr3.filter{$0 != "\0"}
+                word = String(wordArr)
+                word2 = String(wordArr2)
+                word3 = String(wordArr3)
+                
+                // Sets predictive bar button
+                self.button1.title = word
+                self.button2.title = word2
+                self.button3.title = word3
+                
+                
+                userOutput.text = String(iCharsStringArr.joined(separator: " "))
             }
-            
-            // Filters and turns to strings
-            wordArr = wordArr.filter{$0 != "\0"}
-            wordArr2 = wordArr2.filter{$0 != "\0"}
-            wordArr3 = wordArr3.filter{$0 != "\0"}
-            word = String(wordArr)
-            word2 = String(wordArr2)
-            word3 = String(wordArr3)
-            
-            // Sets predictive bar button
-            self.button1.title = word
-            self.button2.title = word2
-            self.button3.title = word3
-            
- 
-            userOutput.text = String(iCharsStringArr.joined(separator: " "))
-            //isTapped = false
+            // Ends here
         }
-        // Ends here
     }
     
     //Comment the shit out of here
     // Disable the mid button when it's blank
-    
     @IBOutlet weak var toolBar: UIToolbar!
     @IBOutlet weak var toolbarBottomConstraint: NSLayoutConstraint!
     var toolbarBottomConstraintInitialValue = CGFloat()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
     }
+    // this just makes the predictive bar
     override func viewDidAppear(_ animated: Bool) {
         enableKeyboardHideOnTap()
         toolbarBottomConstraint.constant = 0
         self.toolbarBottomConstraintInitialValue = toolbarBottomConstraint.constant
         
         if (toolbarBottomConstraint.constant == 0){
-          setCopyandPaste()
+            setCopyandPaste()
         }
     }
     
@@ -150,7 +157,7 @@ class ViewController: UIViewController {
             self.toolbarBottomConstraint.constant = self.toolbarBottomConstraintInitialValue
             self.view.layoutIfNeeded()
         }
-       setCopyandPaste()
+        setCopyandPaste()
     }
     
     // Not sure what it does
@@ -167,28 +174,30 @@ class ViewController: UIViewController {
         if (button1.title == "Copy"){
             UIPasteboard.general.string = userOutput.text!
         }
+        else{
+            tapped = "1"
+            var temp = userInput.text! as String        //
+            var temp1 = temp.split(separator: " ")      // These lines take the last word t
+            temp1.remove(at: (temp1.count - 1))
+            temp1.append(Substring(word))
+            userInput.text = String(temp1.joined(separator: " "))
+        }
     }
     
     
-    
+    // When the 3rd button of the predictive bar is tapped
     @IBAction func button3Tapped(_ sender: Any) {
         print("Button3 tapped")
         if (button1.title == "Paste"){  //paste does not work properly, will be investigated
-        userInput.text = UIPasteboard.general.string
+            userInput.text = UIPasteboard.general.string
         }
         else{
-            //print(y-1)
-            print("str: " + String(strLength))
-            print("s: " + String(s))
-            iCharsStringArr[y-1] = word3
-            iCharsArabic[strLength-1] = wordArr3[s-1]
-            userOutput.text = String(iCharsStringArr.joined(separator: " "))
-            
-            print ("w: " + String(wordArr3[s-1]))
-            print ("c: " + String(iCharsArabic[strLength-1]))
-            
-            print(iCharsStringArr[y-1])
-            //isTapped = true;
+            tapped = "3"
+            var temp = userInput.text! as String        //
+            var temp1 = temp.split(separator: " ")      // These lines take the last word t
+            temp1.remove(at: (temp1.count - 1))
+            temp1.append(Substring(word3))
+            userInput.text = String(temp1.joined(separator: " "))
         }
     }
     
@@ -202,11 +211,13 @@ class ViewController: UIViewController {
         self.button3.title = "Paste"
     }
     
-    func translate ( iChars: inout [Character] , iCharsArabic: inout [Character] )  {
+    // Function that does the translating
+    // Inefficent I know, I'll hash it if this proves successful
+    func translate ( iCharsArabic: inout [Character] )  {
         var i = 0
-        for i in i..<strLength {
+        for i in i..<iCharsArabic.count {
             //i > 0 ? print(i) : nil
-            switch iChars[i] {
+            switch iCharsArabic[i] {
             case "ؤ" :     iCharsArabic[i] = "ؤ"
             case "7" :     iCharsArabic[i] = "ح" // also h
             case "5" :     iCharsArabic[i] = "خ"
@@ -236,27 +247,27 @@ class ViewController: UIViewController {
                 
             case "h" :
                 if(i>0){
-                    switch iChars[i-1] {
+                    switch iCharsArabic[i-1] {
                     case "s","c" :
                         iCharsArabic[i] = "ش"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     case "d" :
                         iCharsArabic[i] = "ظ"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     case "g" :
                         iCharsArabic[i-1] = "غ"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     case "e" :
                         iCharsArabic[i] = "ة"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     case "k" :
                         iCharsArabic[i] = "خ"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "ه"
                     }
@@ -267,23 +278,20 @@ class ViewController: UIViewController {
                 
             case "’","'" :
                 if(i>0){
-                    switch iChars[i-1] {
-                    case "7" :
+                    switch iCharsArabic[i-1] {
+                    case "ع" :
                         iCharsArabic[i] = "خ"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
-                    case "3" :
+                    case "ع" :
                         iCharsArabic[i] = "غ"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
-                    case "9" :
+                    case "ص" :
                         iCharsArabic[i] = "ض"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
-                    case "6" :
+                    case "ط" :
                         iCharsArabic[i] = "ظ"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "'"
                     }
@@ -291,11 +299,11 @@ class ViewController: UIViewController {
                 
             case "e" :
                 if(i>0){
-                    switch iChars[i-1] {
+                    switch iCharsArabic[i-1] {
                     case "e" , "i" :
                         iCharsArabic[i] = "ي"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "ا"
                     }
@@ -306,11 +314,11 @@ class ViewController: UIViewController {
             // Case o and u can all be refactored into 1 case, will look into later
             case "o","O" :
                 if(i>0){
-                    switch iChars[i-1] {
+                    switch iCharsArabic[i-1] {
                     case "o","u" :
                         iCharsArabic[i] = "و"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "ع"
                     }
@@ -321,11 +329,11 @@ class ViewController: UIViewController {
                 
             case "u" :
                 if(i>0){
-                    switch iChars[i-1] {
+                    switch iCharsArabic[i-1] {
                     case "o","u" :
                         iCharsArabic[i] = "و"
                         iCharsArabic[i-1] = "\0"
-                        iChars[i-1] = "\0"
+                        iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "و"
                     }
@@ -340,10 +348,10 @@ class ViewController: UIViewController {
             }
             
             // In the case of duplicates
-            if (i>0 && iChars[i-1]==iChars[i]){
-                iChars[i-1]=="e" ? iCharsArabic[i] = "ي" : nil
+            if (i>0 && iCharsArabic[i-1]==iCharsArabic[i]){
+                iCharsArabic[i-1]=="e" ? iCharsArabic[i] = "ي" : nil
                 iCharsArabic[i] = "\0"
-                iChars[i] = "\0"
+                iCharsArabic[i] = "\0"
             }
             
             // "th" "dh" "z" for ذ
@@ -353,7 +361,6 @@ class ViewController: UIViewController {
              "z" "th" => ظ
              "a" "e" "at" "et" => ة
              */
-            //iChars[i] == "s" ? iCharsArabic[i] = "ث" : nil // iChars[i] ="th" if statement
         }
         
         
