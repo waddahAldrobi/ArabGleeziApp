@@ -30,21 +30,44 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var spacePressed = false
     
     // This function
+    var arbitraryValue = 0
     
     @IBAction func isEditing(_ sender: Any) {
+        
         //print(userInput.text)
         
         let userInputString = Array(userInput.text! as String)
         strLength = userInputString.count
-        var tempArr = userInput.text?.split(separator: " ")
+//        var tempArr = userInput.text?.split(separator: " ")
+//
+//        let startPosition: UITextPosition = userInput.beginningOfDocument
+//        let endPosition: UITextPosition = userInput.endOfDocument
+//
+        if let selectedRange = userInput.selectedTextRange {
+
+            let cursorPosition = userInput.offset(from: userInput.beginningOfDocument, to: selectedRange.start)
+
+            print("\(cursorPosition)")
+        }
+//
+//        let newPosition = userInput.endOfDocument
+//        userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
+        arbitraryValue = (userInput.text?.count)!
+        print ("a: \(arbitraryValue)")
+        if let newPosition = userInput.position(from: userInput.endOfDocument, offset: arbitraryValue) {
+            
+            userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
+        }
         
-        var tempIndex = Int(tempArr!.count)
+        
+//        var tempIndex = Int(tempArr!.count)
 //        var tempIndexLen = tempArr![tempIndex-1].count
 //        print (tempIndexLen-1)
         
         //if the user clicks a space, autmatically insert button three's character
-        if (userInputString.count == 0){
-            userInput.text = ""
+        if (userInput.text?.count == 0){
+            userInput.text = " "
+            setCopyandPaste()
         }
             // ### This where the problem is the space is making it tap
         else if spacePressed{
@@ -55,7 +78,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             userInput.text?.append(" ")
         }
             // for normal words
-        else {
+        else if ((userInput.text?.count)! > 1) {
 //            print(userInputString.count)
             //setup for recognizing only last word of userInput
             let temp = userInput.text! as String
@@ -81,6 +104,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
                 let iCharsArabicString = String(iCharsArabic)
                 var wordArray = iCharsArabicString.split(separator: " ")
+                
                 let lastWord = Array(wordArray[wordArray.count-1])
                 
                 (wordArr, wordArr2, wordArr3) = (lastWord, lastWord, lastWord)
@@ -127,6 +151,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         userInput.delegate = self
+        
+        userInput.text! = "س"
+        userInput.text! = " "
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -221,7 +248,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             tapped = "3"
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-            temp1.remove(at: (temp1.count - 1))
+            if temp1.count != 0 { temp1.remove(at: (temp1.count - 1)) }
             temp1.append(Substring(word3))
             userInput.text = String(temp1.joined(separator: " "))
         }
@@ -392,6 +419,23 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+//    override var textInputMode: UITextInputMode? {
+//        let language = userInput.text!.getKeyboardLanguage()
+//        if language.isEmpty {
+//            return super.textInputMode
+//            
+//        } else {
+//            for tim in UITextInputMode.activeInputModes {
+//                if tim.primaryLanguage!.contains(language) {
+//                    return tim
+//                }
+//            }
+//            textInputMode?.primaryLanguage = "en"
+//            return super.textInputMode
+//            
+//        }
+//        
+//    }
     
 }
 
