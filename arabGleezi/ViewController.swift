@@ -269,7 +269,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func translate ( iCharsArabic: inout [Character] )  {
         var i = 0
         for i in i..<iCharsArabic.count {
-            //i > 0 ? print(i) : nil
+            //These all need to be hashed
             switch iCharsArabic[i] {
             case "ؤ" :     iCharsArabic[i] = "ؤ"
             case "7" :     iCharsArabic[i] = "ح" // also h
@@ -298,28 +298,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 /*ء أ آ ؤ إ ئ */
             case "2" :     iCharsArabic[i] = "أ"
                 
+            // Try to remember why you have those else's maybe it's fixed
             case "h" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "s","c" :
+                    case "س","c" :
                         iCharsArabic[i] = "ش"
                         iCharsArabic[i-1] = "\0"
-                        iCharsArabic[i-1] = "\0"
-                    case "d" :
+                    case "ط" :
                         iCharsArabic[i] = "ظ"
                         iCharsArabic[i-1] = "\0"
+                    case "ج" :
+                        iCharsArabic[i] = "غ"
                         iCharsArabic[i-1] = "\0"
-                    case "g" :
-                        iCharsArabic[i-1] = "غ"
-                        iCharsArabic[i-1] = "\0"
-                        iCharsArabic[i-1] = "\0"
-                    case "e" :
+                    // Needs refinement
+                    case "ه" :
                         iCharsArabic[i] = "ة"
                         iCharsArabic[i-1] = "\0"
-                        iCharsArabic[i-1] = "\0"
-                    case "k" :
+                    case "ك" :
                         iCharsArabic[i] = "خ"
-                        iCharsArabic[i-1] = "\0"
                         iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "ه"
@@ -332,7 +329,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             case "’","'" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "ع" :
+                    case "ح" :
                         iCharsArabic[i] = "خ"
                         iCharsArabic[i-1] = "\0"
                     case "ع" :
@@ -344,7 +341,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     case "ط" :
                         iCharsArabic[i] = "ظ"
                         iCharsArabic[i-1] = "\0"
-                        iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "'"
                     }
@@ -353,9 +349,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             case "e" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "e" , "i" :
+                    case "ا" , "ي" :
                         iCharsArabic[i] = "ي"
-                        iCharsArabic[i-1] = "\0"
                         iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "ا"
@@ -368,9 +363,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
             case "o","O" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "o","u" :
+                    // the 3een doesnt seem right
+                    case "ع","و" :
                         iCharsArabic[i] = "و"
-                        iCharsArabic[i-1] = "\0"
                         iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "ع"
@@ -383,9 +378,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             case "u" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "o","u" :
+                    case "و" :
                         iCharsArabic[i] = "و"
-                        iCharsArabic[i-1] = "\0"
                         iCharsArabic[i-1] = "\0"
                     default:
                         iCharsArabic[i] = "و"
@@ -404,7 +398,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
             if (i>0 && iCharsArabic[i-1]==iCharsArabic[i]){
                 iCharsArabic[i-1]=="e" ? iCharsArabic[i] = "ي" : nil
                 iCharsArabic[i] = "\0"
-                iCharsArabic[i] = "\0"
             }
             
             // "th" "dh" "z" for ذ
@@ -415,28 +408,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
              "a" "e" "at" "et" => ة
              */
         }
-        
-        
     }
-    
-//    override var textInputMode: UITextInputMode? {
-//        let language = userInput.text!.getKeyboardLanguage()
-//        if language.isEmpty {
-//            return super.textInputMode
-//            
-//        } else {
-//            for tim in UITextInputMode.activeInputModes {
-//                if tim.primaryLanguage!.contains(language) {
-//                    return tim
-//                }
-//            }
-//            textInputMode?.primaryLanguage = "en"
-//            return super.textInputMode
-//            
-//        }
-//        
-//    }
-    
 }
 
 

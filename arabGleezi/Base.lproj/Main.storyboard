@@ -18,19 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter here..." textAlignment="right" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Sa5-4m-Up1">
-                                <rect key="frame" x="16" y="84" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                                <connections>
-                                    <action selector="isEditing:" destination="BYZ-38-t0r" eventType="editingChanged" id="rIq-vh-rRu"/>
-                                </connections>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QP5-JE-bAO">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QP5-JE-bAO">
                                 <rect key="frame" x="16" y="193" width="343" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -56,11 +45,24 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter here..." textAlignment="right" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Sa5-4m-Up1">
+                                <rect key="frame" x="36" y="81" width="343" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                <connections>
+                                    <action selector="isEditing:" destination="BYZ-38-t0r" eventType="editingChanged" id="rIq-vh-rRu"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="QP5-JE-bAO" firstAttribute="top" secondItem="Sa5-4m-Up1" secondAttribute="bottom" constant="82" id="CRe-Qh-cRU"/>
                             <constraint firstItem="rlq-Iq-0yy" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="SF2-bH-OTr"/>
+                            <constraint firstItem="Sa5-4m-Up1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="36" id="Tht-uZ-Ndn"/>
                             <constraint firstItem="rlq-Iq-0yy" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="WLQ-xg-Rea"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Sa5-4m-Up1" secondAttribute="trailing" constant="35" id="hvP-xQ-Djd"/>
+                            <constraint firstItem="Sa5-4m-Up1" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="61" id="pIL-uh-QE1"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="rlq-Iq-0yy" secondAttribute="bottom" constant="7" id="yDo-4U-Non"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
