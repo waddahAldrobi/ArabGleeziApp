@@ -12,9 +12,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var userInput: UITextField!
     @IBOutlet weak var userOutput: UILabel!
     var strLength = 0
-    var word = ""
-    var word2 = ""
-    var word3 = ""
+
     var iCharsStringArr = [String]()
     var y = 0
     var s = 0
@@ -29,41 +27,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     var spacePressed = false
     
-    // This function
-    var arbitraryValue = 0
     
     @IBAction func isEditing(_ sender: Any) {
         
-        //print(userInput.text)
-        
         let userInputString = Array(userInput.text! as String)
         strLength = userInputString.count
-//        var tempArr = userInput.text?.split(separator: " ")
-//
-//        let startPosition: UITextPosition = userInput.beginningOfDocument
-//        let endPosition: UITextPosition = userInput.endOfDocument
-//
-        if let selectedRange = userInput.selectedTextRange {
 
-            let cursorPosition = userInput.offset(from: userInput.beginningOfDocument, to: selectedRange.start)
-
-            print("\(cursorPosition)")
-        }
-//
-//        let newPosition = userInput.endOfDocument
-//        userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
-        arbitraryValue = (userInput.text?.count)!
-        print ("a: \(arbitraryValue)")
-        if let newPosition = userInput.position(from: userInput.endOfDocument, offset: arbitraryValue) {
-            
-            userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
-        }
-        
-        
-//        var tempIndex = Int(tempArr!.count)
-//        var tempIndexLen = tempArr![tempIndex-1].count
-//        print (tempIndexLen-1)
-        
         //if the user clicks a space, autmatically insert button three's character
         if (userInput.text?.count == 0){
             userInput.text = " "
@@ -79,7 +48,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
             // for normal words
         else if ((userInput.text?.count)! > 1) {
-//            print(userInputString.count)
+
             //setup for recognizing only last word of userInput
             let temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")
@@ -126,14 +95,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 wordArr = wordArr.filter{$0 != "\0"}
                 wordArr2 = wordArr2.filter{$0 != "\0"}
                 wordArr3 = wordArr3.filter{$0 != "\0"}
-                word = String(wordArr)
-                word2 = String(wordArr2)
-                word3 = String(wordArr3)
                 
                 // Sets predictive bar button
-                self.button1.title = word
-                self.button2.title = word2
-                self.button3.title = word3
+                self.button1.title = String(wordArr)
+                self.button2.title = String(wordArr2)
+                self.button3.title = String(wordArr3)
                 
                 
                 userOutput.text = String(iCharsStringArr.joined(separator: " "))
@@ -217,6 +183,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
+    
+    
     @IBOutlet weak var button1: UIBarButtonItem!
     @IBOutlet weak var button2: UIBarButtonItem!
     @IBOutlet weak var button3: UIBarButtonItem!
@@ -224,7 +192,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func button1Tapped(_ sender: Any) {
         print("Button1 tapped")
         if (button1.title == "Copy"){
-            UIPasteboard.general.string = userOutput.text!
+            UIPasteboard.general.string = userInput.text!
         }
         else{
             tapped = "1"
@@ -232,7 +200,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
             //Keeps it from breaking 
             if temp1.count != 0 { temp1.remove(at: (temp1.count - 1))}
-            temp1.append(Substring(word))
+            temp1.append(Substring(String(wordArr)))
             userInput.text = String(temp1.joined(separator: " "))
         }
     }
@@ -243,13 +211,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         print("Button3 tapped")
         if (button1.title == "Paste"){  //paste does not work properly, will be investigated
             userInput.text = UIPasteboard.general.string
+//            iCharsArabic = Array(userInput.text!)
+//            translate(iCharsArabic: &iCharsArabic)
         }
+
         else{
             tapped = "3"
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
             if temp1.count != 0 { temp1.remove(at: (temp1.count - 1)) }
-            temp1.append(Substring(word3))
+            temp1.append(Substring(String(wordArr3)))
             userInput.text = String(temp1.joined(separator: " "))
         }
     }
@@ -264,133 +235,120 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.button3.title = "Paste"
     }
     
+    var mappings: [Character : Character] = [
+       /*number*/"2" : "أ",  //also  /*ء أ آ ؤ إ ئ */
+       /*number*/"3" : "ع",
+       /*number*/"5" : "خ",
+       /*number*/"6" : "ط",  //also "t"
+       /*number*/"7" : "ح",  //also "h"
+       /*number*/"8" : "ق",
+       /*number*/"9" : "ص",  //also "s"
+        
+                 "a" : "ا", // a lot more complicated
+                 "b" : "ب",
+                 "d" : "د",
+                 "f" : "ف",
+                 "g" : "ج", // "dj"
+                 
+                 "i" : "ي", // other letters
+                 "j" : "ج",
+                 "k" : "ك", // maybe g
+                 "l" : "ل",
+                 "m" : "م",
+                 "n" : "ن",
+                 
+                 "p" : "ب",
+                 "q" : "ق", // ## g and 2 too
+                 "r" : "ر",
+                 "s" : "س",
+                 
+                 "t" : "ت",
+                 "v" : "ف",
+                 
+                 "w" : "و", //ou oo, maybe o
+                 "y" : "ي", // ai, maybe a
+                 "z" : "ز",
+                 
+     /*special*/ "?" :  "؟",
+     /*special*/ "," :  "،"
+        ]
+    
     // Function that does the translating
-    // Inefficent I know, I'll hash it if this proves successful
     func translate ( iCharsArabic: inout [Character] )  {
-        var i = 0
+        let i = 0
         for i in i..<iCharsArabic.count {
-            //These all need to be hashed
+            // Calls the dictionary 
+            iCharsArabic[i] = mappings[iCharsArabic[i], default: iCharsArabic[i] ]// also h
             switch iCharsArabic[i] {
-            case "ؤ" :     iCharsArabic[i] = "ؤ"
-            case "7" :     iCharsArabic[i] = "ح" // also h
-            case "5" :     iCharsArabic[i] = "خ"
-            case "d" :     iCharsArabic[i] = "د"
-            case "z" :     iCharsArabic[i] = "ز"
-            case "r" :     iCharsArabic[i] = "ر"
-            case "s" :     iCharsArabic[i] = "س"
-            case "9" :     iCharsArabic[i] = "ص" // ## can also be s
-            case "6" :     iCharsArabic[i] = "ط" // ## can also be t
-            case "f","v":  iCharsArabic[i] = "ف"
-            case "m" :     iCharsArabic[i] = "م"
-            case "3" :     iCharsArabic[i] = "ع"
-            case "8","q" : iCharsArabic[i] = "ق" // ## g and 2 too
-            case "k" :     iCharsArabic[i] = "ك" // maybe g
-            case "l" :     iCharsArabic[i] = "ل"
-            case "n" :     iCharsArabic[i] = "ن"
-            case "w" : iCharsArabic[i] = "و" //ou oo, maybe o
-            case "y","i" : iCharsArabic[i] = "ي" // ai, maybe a
-            case "a" :     iCharsArabic[i] = "ا"
-            case "b","p" : iCharsArabic[i] = "ب"
-            case "t" :     iCharsArabic[i] = "ت"
-            case "j","g" : iCharsArabic[i] = "ج" // "dj"
-            case "?" :     iCharsArabic[i] = "؟"
-            case "," :     iCharsArabic[i] = "،"
-                /*ء أ آ ؤ إ ئ */
-            case "2" :     iCharsArabic[i] = "أ"
-                
             // Try to remember why you have those else's maybe it's fixed
             case "h" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "س","c" :
-                        iCharsArabic[i] = "ش"
-                        iCharsArabic[i-1] = "\0"
-                    case "ط" :
-                        iCharsArabic[i] = "ظ"
-                        iCharsArabic[i-1] = "\0"
-                    case "ج" :
-                        iCharsArabic[i] = "غ"
-                        iCharsArabic[i-1] = "\0"
-                    // Needs refinement
-                    case "ه" :
-                        iCharsArabic[i] = "ة"
-                        iCharsArabic[i-1] = "\0"
-                    case "ك" :
-                        iCharsArabic[i] = "خ"
-                        iCharsArabic[i-1] = "\0"
-                    default:
-                        iCharsArabic[i] = "ه"
+                    case "س","c" : iCharsArabic[i] = "ش"
+                    case "ط" : iCharsArabic[i] = "ظ"
+                    case "ج" : iCharsArabic[i] = "غ"
+                    case "ه" : iCharsArabic[i] = "ة"
+                    case "ك" : iCharsArabic[i] = "خ"
+                        
+                    default: iCharsArabic[i] = "ه"
                     }
+                    
+                    if iCharsArabic[i] != "ه"{iCharsArabic[i-1] = "\0"}
                 }
-                else{
-                    iCharsArabic[i] = "ه" // ## e,ah and eh , maybe a
-                }
+                
+                else{ iCharsArabic[i] = "ه"} // ## e,ah and eh , maybe a
                 
             case "’","'" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "ح" :
-                        iCharsArabic[i] = "خ"
-                        iCharsArabic[i-1] = "\0"
-                    case "ع" :
-                        iCharsArabic[i] = "غ"
-                        iCharsArabic[i-1] = "\0"
-                    case "ص" :
-                        iCharsArabic[i] = "ض"
-                        iCharsArabic[i-1] = "\0"
-                    case "ط" :
-                        iCharsArabic[i] = "ظ"
-                        iCharsArabic[i-1] = "\0"
-                    default:
-                        iCharsArabic[i] = "'"
+                        case "ح" :iCharsArabic[i] = "خ"
+                        case "ع" :iCharsArabic[i] = "غ"
+                        case "ص" :iCharsArabic[i] = "ض"
+                        case "ط" :iCharsArabic[i] = "ظ"
+                        default: iCharsArabic[i] = "'"
                     }
+                    
+                    if iCharsArabic[i] != "'"{iCharsArabic[i-1] = "\0"}
                 }
                 
             case "e" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "ا" , "ي" :
-                        iCharsArabic[i] = "ي"
-                        iCharsArabic[i-1] = "\0"
-                    default:
-                        iCharsArabic[i] = "ا"
+                    
+                        case "ا" , "ي" : iCharsArabic[i] = "ي"
+                        default:iCharsArabic[i] = "ا"
                     }
+                    
+                    if iCharsArabic[i] != "ا" {iCharsArabic[i-1] = "\0"}
                 }
-                else{
-                    iCharsArabic[i] = "ا"
-                }
+                
+                else{ iCharsArabic[i] = "ا" }
+            
             // Case o and u can all be refactored into 1 case, will look into later
             case "o","O" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    // the 3een doesnt seem right
-                    case "ع","و" :
-                        iCharsArabic[i] = "و"
-                        iCharsArabic[i-1] = "\0"
-                    default:
-                        iCharsArabic[i] = "ع"
+                        // the 3een doesnt seem right
+                        case "ع","و" :iCharsArabic[i] = "و"
+                        default: iCharsArabic[i] = "ع"
                     }
+                    
+                    if iCharsArabic[i] != "ع" {iCharsArabic[i-1] = "\0"}
                 }
-                else{
-                    iCharsArabic[i] = "ع"
-                }
+                else{ iCharsArabic[i] = "ع" }
                 
             case "u" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "و" :
-                        iCharsArabic[i] = "و"
-                        iCharsArabic[i-1] = "\0"
-                    default:
-                        iCharsArabic[i] = "و"
+                        case "و" : iCharsArabic[i] = "و"
+                        default: iCharsArabic[i] = "و"
                     }
+                    
+                    if iCharsArabic[i] != "و" {iCharsArabic[i-1] = "\0"}
                 }
-                else{
-                    iCharsArabic[i] = "و"
-                }
+                else{iCharsArabic[i] = "و"}
                 
             default: break
-                
                 
             }
             
@@ -400,15 +358,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 iCharsArabic[i] = "\0"
             }
             
-            // "th" "dh" "z" for ذ
-            
-            /*
-             "d" "dh" => ض
-             "z" "th" => ظ
-             "a" "e" "at" "et" => ة
-             */
-        }
-    }
-}
+        } // for i
+    } //translate
+
+}// Uiveiw
 
 
