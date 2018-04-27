@@ -28,9 +28,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var spacePressed = false
     var arbitraryValue = 0
     
+    // array holds all the words
     var array = [Substring]()
-    var index = 0
     
+    // index holds the index of the word being edited
+    var index = 0
     
     @IBAction func isEditing(_ sender: Any) {
         userInput.makeTextWritingDirectionRightToLeft((Any).self)
