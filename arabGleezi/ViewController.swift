@@ -26,25 +26,62 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var tapped = "1"
     
     var spacePressed = false
+    var arbitraryValue = 0
+    
+    var array = [Substring]()
+    var index = 0
     
     
     @IBAction func isEditing(_ sender: Any) {
-        
+        userInput.makeTextWritingDirectionRightToLeft((Any).self)
         let userInputString = Array(userInput.text! as String)
         strLength = userInputString.count
+        
+//        arbitraryValue = (userInput.text?.count)!
+//        print ("a: \(arbitraryValue)")
+//        print ("w: \(wordArr.count)")
+//        if let newPosition = userInput.position(from: userInput.endOfDocument, offset: arbitraryValue) {
+//
+//            userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
+//        }
+        let selectedRange: UITextRange? = userInput.selectedTextRange
+        let cursorOffset: Int = userInput.offset(from: userInput.beginningOfDocument , to: (selectedRange?.start)!)
+        let text: String = userInput.text!
+        let substring: String? = (text as? NSString)?.substring(to: cursorOffset)
+        let Words = substring?.components(separatedBy: " ")
+        let lastWordEdited = substring?.components(separatedBy: " ").last
+        index = (Words?.index(of: lastWordEdited!))!
 
-        //if the user clicks a space, autmatically insert button three's character
+        print (cursorOffset)
+        print (index as Any)
+        print(strLength)
+        
+        array = userInput.text!.split(separator: " ")
+        print(array)
+        
+        var str = String(lastWordEdited!)
+        
+
         if (userInput.text?.count == 0){
             userInput.text = " "
             setCopyandPaste()
         }
-            // ### This where the problem is the space is making it tap
+
         else if spacePressed{
             spacePressed = false
-            if tapped == "1"{button1Tapped(self)}
-            else if tapped == "3"{button3Tapped(self); tapped="1"}
+            if cursorOffset == strLength{
+                if tapped == "1"{button1Tapped(self)}
+                else if tapped == "3"{button3Tapped(self); tapped="1"}
+            }
             
-            userInput.text?.append(" ")
+//            userInput.text?.append(" ")
+            // Magic so far is here
+            userInput.insertText(" ")
+            
+            
+//           userInput.text?.append(" ")
+//           userInput.text?.insert(" ", at: cursorOffset)
+            
         }
             // for normal words
         else if ((userInput.text?.count)! > 1) {
@@ -71,10 +108,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 iCharsString = String(iCharsArabic)
                 iCharsStringArr = iCharsString.components(separatedBy: " ")
                 
+                
                 let iCharsArabicString = String(iCharsArabic)
                 var wordArray = iCharsArabicString.split(separator: " ")
                 
-                let lastWord = Array(wordArray[wordArray.count-1])
+                var lastWord = Array(wordArray[wordArray.count-1])
+                
+                if cursorOffset != strLength {
+                    lastWord = Array (array[index])
+                }
                 
                 (wordArr, wordArr2, wordArr3) = (lastWord, lastWord, lastWord)
                 
@@ -91,6 +133,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     s = s + 1
                 }
                 
+                
                 // Filters and turns to strings
                 wordArr = wordArr.filter{$0 != "\0"}
                 wordArr2 = wordArr2.filter{$0 != "\0"}
@@ -102,7 +145,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.button3.title = String(wordArr3)
                 
                 
-                userOutput.text = String(iCharsStringArr.joined(separator: " "))
+                
+        
+//                userOutput.text = String(iCharsStringArr.joined(separator: " "))
             }
             // Ends here
         }
@@ -117,10 +162,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         userInput.delegate = self
-        
-        userInput.text! = "س"
-        userInput.text! = " "
-    }
+        }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string == " " {
@@ -130,60 +172,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         return true
     }
-    
-    // this just makes the predictive bar
-    override func viewDidAppear(_ animated: Bool) {
-        enableKeyboardHideOnTap()
-        toolbarBottomConstraint.constant = 0
-        self.toolbarBottomConstraintInitialValue = toolbarBottomConstraint.constant
-        
-        if (toolbarBottomConstraint.constant == 0){
-            setCopyandPaste()
-        }
-    }
-    
-    // Removes keyboard on Tap
-    private func enableKeyboardHideOnTap() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.hideKeyboard))
-        self.view.addGestureRecognizer(tap)
-    }
-    
-    //Moves toolbar up
-    @objc func keyboardWillShow(notification: NSNotification)
-    {
-        let info = notification.userInfo!
-        
-        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        
-        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
-        
-        UIView.animate(withDuration: duration) {
-            
-            self.toolbarBottomConstraint.constant = keyboardFrame.size.height
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    //Moves toolbar down
-    @objc func keyboardWillHide(notification : NSNotification){
-        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
-        
-        UIView.animate(withDuration: duration) {
-            
-            self.toolbarBottomConstraint.constant = self.toolbarBottomConstraintInitialValue
-            self.view.layoutIfNeeded()
-        }
-        setCopyandPaste()
-    }
-    
-    // Not sure what it does
-    @objc func hideKeyboard(){
-        self.view.endEditing(true)
-    }
-    
-    
     
     @IBOutlet weak var button1: UIBarButtonItem!
     @IBOutlet weak var button2: UIBarButtonItem!
@@ -361,6 +349,60 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } // for i
     } //translate
 
+    
+    // keyboard related
+    // this just makes the predictive bar
+    override func viewDidAppear(_ animated: Bool) {
+        enableKeyboardHideOnTap()
+        toolbarBottomConstraint.constant = 0
+        self.toolbarBottomConstraintInitialValue = toolbarBottomConstraint.constant
+        
+        if (toolbarBottomConstraint.constant == 0){
+            setCopyandPaste()
+        }
+    }
+    
+    // Removes keyboard on Tap
+    private func enableKeyboardHideOnTap() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.hideKeyboard))
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    //Moves toolbar up
+    @objc func keyboardWillShow(notification: NSNotification)
+    {
+        let info = notification.userInfo!
+        
+        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.toolbarBottomConstraint.constant = keyboardFrame.size.height
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    //Moves toolbar down
+    @objc func keyboardWillHide(notification : NSNotification){
+        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
+        
+        UIView.animate(withDuration: duration) {
+            
+            self.toolbarBottomConstraint.constant = self.toolbarBottomConstraintInitialValue
+            self.view.layoutIfNeeded()
+        }
+        setCopyandPaste()
+    }
+    
+    // Not sure what it does
+    @objc func hideKeyboard(){
+        self.view.endEditing(true)
+    }
+    
 }// Uiveiw
 
 
