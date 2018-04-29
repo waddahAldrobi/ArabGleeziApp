@@ -28,9 +28,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var spacePressed = false
     var arbitraryValue = 0
     
+    // array holds all the words
     var array = [Substring]()
+    
+    // index holds the index of the word being edited
     var index = 0
     
+    
+    var Words = [String]()
     
     @IBAction func isEditing(_ sender: Any) {
         userInput.makeTextWritingDirectionRightToLeft((Any).self)
@@ -48,16 +53,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let cursorOffset: Int = userInput.offset(from: userInput.beginningOfDocument , to: (selectedRange?.start)!)
         let text: String = userInput.text!
         let substring: String? = (text as? NSString)?.substring(to: cursorOffset)
-        let Words = substring?.components(separatedBy: " ")
+        Words = (substring?.components(separatedBy: " "))!
         let lastWordEdited = substring?.components(separatedBy: " ").last
-        index = (Words?.index(of: lastWordEdited!))!
+        index = (Words.index(of: lastWordEdited!))!
 
-        print (cursorOffset)
-        print (index as Any)
-        print(strLength)
+//        print (cursorOffset)
+        print ("index:  \(index as Any)")
+        print ("count: \(Words.count)")
+//        print(strLength)
         
         array = userInput.text!.split(separator: " ")
-        print(array)
+//        print(array)
         
         var str = String(lastWordEdited!)
         
@@ -69,15 +75,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
         else if spacePressed{
             spacePressed = false
+            
             if cursorOffset == strLength{
                 if tapped == "1"{button1Tapped(self)}
-                else if tapped == "3"{button3Tapped(self); tapped="1"}
+                else if tapped == "3"{button3Tapped(self)}
             }
+            tapped="1"
             
 //            userInput.text?.append(" ")
+           
             // Magic so far is here
             userInput.insertText(" ")
-            
             
 //           userInput.text?.append(" ")
 //           userInput.text?.insert(" ", at: cursorOffset)
@@ -186,10 +194,23 @@ class ViewController: UIViewController, UITextFieldDelegate {
             tapped = "1"
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-            //Keeps it from breaking 
-            if temp1.count != 0 { temp1.remove(at: (temp1.count - 1))}
-            temp1.append(Substring(String(wordArr)))
+            
+            print("temp1: \(temp1.count)")
+            
+            //Keeps it from breaking
+            if index == temp1.count {
+                if temp1.count >= 1 && index == 0{index = 1}
+                userInput.insertText(" ")
+                if temp1.count != 0 { temp1.remove(at: (index-1))}
+                temp1.insert(Substring(String(wordArr)), at: (index-1))
+            }
+            else {
+                if temp1.count != 0 { temp1.remove(at: (index))}
+                temp1.insert(Substring(String(wordArr)), at: (index))
+            }
+            
             userInput.text = String(temp1.joined(separator: " "))
+            
         }
     }
     
@@ -204,12 +225,28 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
 
         else{
-            tapped = "3"
-            var temp = userInput.text! as String        //
+            tapped = "1"
+            var temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-            if temp1.count != 0 { temp1.remove(at: (temp1.count - 1)) }
-            temp1.append(Substring(String(wordArr3)))
+            
+            print ("temp1: \(temp1.count)")
+//            array.removeFirst()
+            
+            if index == temp1.count {
+                print("here1")
+                if temp1.count >= 1 && index == 0{index = 1}
+                userInput.insertText(" ")
+                if temp1.count != 0 { temp1.remove(at: (index-1))}
+                temp1.insert(Substring(String(wordArr3)), at: (index-1))
+            }
+            else {
+                print("here2")
+                if temp1.count != 0 { temp1.remove(at: (index))}
+                temp1.insert(Substring(String(wordArr3)), at: (index))
+            }
+            
             userInput.text = String(temp1.joined(separator: " "))
+
         }
     }
     
