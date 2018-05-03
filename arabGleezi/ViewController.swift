@@ -34,6 +34,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     // index holds the index of the word being edited
     var index = 0
     
+    var lastWordEdited = ""
+    
     
     var Words = [String]()
     
@@ -42,72 +44,76 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let userInputString = Array(userInput.text! as String)
         strLength = userInputString.count
         
-//        arbitraryValue = (userInput.text?.count)!
-//        print ("a: \(arbitraryValue)")
-//        print ("w: \(wordArr.count)")
-//        if let newPosition = userInput.position(from: userInput.endOfDocument, offset: arbitraryValue) {
-//
-//            userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
-//        }
+        // Related to cursor position
         let selectedRange: UITextRange? = userInput.selectedTextRange
         let cursorOffset: Int = userInput.offset(from: userInput.beginningOfDocument , to: (selectedRange?.start)!)
         let text: String = userInput.text!
         let substring: String? = (text as? NSString)?.substring(to: cursorOffset)
         Words = (substring?.components(separatedBy: " "))!
-        let lastWordEdited = substring?.components(separatedBy: " ").last
-        index = (Words.index(of: lastWordEdited!))!
+        lastWordEdited = (substring?.components(separatedBy: " ").last)!
+        index = (Words.index(of: lastWordEdited))!
 
-//        print (cursorOffset)
-        print ("index:  \(index as Any)")
-        print ("count: \(Words.count)")
-//        print(strLength)
+        print(lastWordEdited)
+
+//        print ("index:  \(index as Any)")
+//        print ("count: \(Words.count)")
         
         array = userInput.text!.split(separator: " ")
-//        print(array)
-        
-        var str = String(lastWordEdited!)
         
 
         if (userInput.text?.count == 0){
-            userInput.text = " "
+            userInput.text = ""
             setCopyandPaste()
         }
 
         else if spacePressed{
             spacePressed = false
+            button1Tapped(self)
             
-            if cursorOffset == strLength{
-                if tapped == "1"{button1Tapped(self)}
-                else if tapped == "3"{button3Tapped(self)}
-            }
+//            if tapped == "1"{button1Tapped(self)}
+//            else if tapped == "3"{button3Tapped(self)}
+
             tapped="1"
             
-//            userInput.text?.append(" ")
-           
+            print(cursorOffset)
+            print(strLength)
             // Magic so far is here
+//            if cursorOffset+1 <= strLength {userInput.insertText(" ")}
             userInput.insertText(" ")
-            
-//           userInput.text?.append(" ")
-//           userInput.text?.insert(" ", at: cursorOffset)
-            
         }
             // for normal words
-        else if ((userInput.text?.count)! > 1) {
+        else if ((userInput.text?.count)! >= 1) {
 
             //setup for recognizing only last word of userInput
             let temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")
             
             strLength = userInput.text?.count ?? 0
-            iCharsArabic = Array(String(temp1[temp1.count-1]))
+           
+//            if cursorOffset == strLength {
+//                iCharsArabic = Array(String(temp1.last!))
+//            }
+//            else {
+//                if  index == 0{
+//                    iCharsArabic = Array(String(temp1[index]))
+//                }
+//                else {
+//                    iCharsArabic = Array(String(temp1[index-1]))
+//                }
+//            }
+            
+            iCharsArabic = Array(lastWordEdited)
+            
+            
             translate (iCharsArabic: &iCharsArabic)
+            
+            print(iCharsArabic)
             
             if (strLength < 1){
                 userOutput.text = ""
                 setCopyandPaste()
             }
-            else{  //figure out how to do extra letter, and start determining location of letter in word
-                
+            else{
                 
                 // Awesome functions that filters out the nulls for me
                 iCharsArabic = iCharsArabic.filter{$0 != "\0"}
@@ -115,16 +121,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 // All the following is the predictive bar suggestions
                 iCharsString = String(iCharsArabic)
                 iCharsStringArr = iCharsString.components(separatedBy: " ")
+                print(iCharsString)
                 
+//                let iCharsArabicString = String(iCharsArabic)
+//                var wordArray = iCharsString.split(separator: " ")
                 
-                let iCharsArabicString = String(iCharsArabic)
-                var wordArray = iCharsArabicString.split(separator: " ")
+//                let lastWord = Array(wordArray.last!)
+                let lastWord = Array(iCharsString)
                 
-                var lastWord = Array(wordArray[wordArray.count-1])
-                
-                if cursorOffset != strLength {
-                    lastWord = Array (array[index])
-                }
+//                if cursorOffset != strLength {
+//                    lastWord = Array (array[index])
+//                }
                 
                 (wordArr, wordArr2, wordArr3) = (lastWord, lastWord, lastWord)
                 
@@ -161,7 +168,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    //Comment the shit out of here
     // Disable the mid button when it's blank
     @IBOutlet weak var toolBar: UIToolbar!
     @IBOutlet weak var toolbarBottomConstraint: NSLayoutConstraint!
@@ -195,12 +201,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
             
-            print("temp1: \(temp1.count)")
-            
             //Keeps it from breaking
             if index == temp1.count {
-                if temp1.count >= 1 && index == 0{index = 1}
-                userInput.insertText(" ")
+                if index == 0{index = 1}
                 if temp1.count != 0 { temp1.remove(at: (index-1))}
                 temp1.insert(Substring(String(wordArr)), at: (index-1))
             }
@@ -220,22 +223,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
         print("Button3 tapped")
         if (button1.title == "Paste"){  //paste does not work properly, will be investigated
             userInput.text = UIPasteboard.general.string
-//            iCharsArabic = Array(userInput.text!)
-//            translate(iCharsArabic: &iCharsArabic)
         }
 
         else{
             tapped = "1"
+            
             var temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
             
             print ("temp1: \(temp1.count)")
-//            array.removeFirst()
             
             if index == temp1.count {
                 print("here1")
                 if temp1.count >= 1 && index == 0{index = 1}
-                userInput.insertText(" ")
                 if temp1.count != 0 { temp1.remove(at: (index-1))}
                 temp1.insert(Substring(String(wordArr3)), at: (index-1))
             }
@@ -246,7 +246,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             }
             
             userInput.text = String(temp1.joined(separator: " "))
-
+            spacePressed = false
         }
     }
     
@@ -378,7 +378,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             }
             
             // In the case of duplicates
-            if (i>0 && iCharsArabic[i-1]==iCharsArabic[i]){
+            if (i>0 && iCharsArabic[i-1]==iCharsArabic[i] && iCharsArabic[i-1] != " "  && iCharsArabic[i] != " " ){
                 iCharsArabic[i-1]=="e" ? iCharsArabic[i] = "ي" : nil
                 iCharsArabic[i] = "\0"
             }
