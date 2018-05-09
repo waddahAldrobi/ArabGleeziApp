@@ -23,14 +23,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var wordArr2 = [Character]()
     var wordArr3 = [Character]()
     
-    var tapped = "1"
-    
     var spacePressed = false
     var arbitraryValue = 0
     
     // array holds all the words
     var array = [Substring]()
-<<<<<<< HEAD
     
     // index holds the index of the word being edited
     var index = 0
@@ -39,15 +36,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     var Words = [String]()
-=======
-    
-    // index holds the index of the word being edited
-    var index = 0
->>>>>>> 8034ac310e5bbb1a4f2a8e6be9547a27c24ba93d
+    var userInputString = [Character]()
+
     
     @IBAction func isEditing(_ sender: Any) {
         userInput.makeTextWritingDirectionRightToLeft((Any).self)
-        let userInputString = Array(userInput.text! as String)
+        userInputString = Array(userInput.text! as String)
         strLength = userInputString.count
         
         // Related to cursor position
@@ -59,7 +53,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         lastWordEdited = (substring?.components(separatedBy: " ").last)!
         index = (Words.index(of: lastWordEdited))!
 
-        print(lastWordEdited)
+//        print(lastWordEdited)
+          print(userInputString)
 
 //        print ("index:  \(index as Any)")
 //        print ("count: \(Words.count)")
@@ -74,18 +69,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
         else if spacePressed{
             spacePressed = false
-            button1Tapped(self)
             
-//            if tapped == "1"{button1Tapped(self)}
-//            else if tapped == "3"{button3Tapped(self)}
-
-            tapped="1"
-            
+//            if userInputString[userInputString.count - 1] == " "{
+                button1Tapped(self)
+//                userInput.insertText(" ")
+//            }
+//            else {
+//                userInput.insertText(" ")
+//            }
+//
             print(cursorOffset)
             print(strLength)
-            // Magic so far is here
-//            if cursorOffset+1 <= strLength {userInput.insertText(" ")}
-            userInput.insertText(" ")
         }
             // for normal words
         else if ((userInput.text?.count)! >= 1) {
@@ -95,32 +89,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
             var temp1 = temp.split(separator: " ")
             
             strLength = userInput.text?.count ?? 0
-           
-//            if cursorOffset == strLength {
-//                iCharsArabic = Array(String(temp1.last!))
-//            }
-//            else {
-//                if  index == 0{
-//                    iCharsArabic = Array(String(temp1[index]))
-//                }
-//                else {
-//                    iCharsArabic = Array(String(temp1[index-1]))
-//                }
-//            }
             
             iCharsArabic = Array(lastWordEdited)
-            
             
             translate (iCharsArabic: &iCharsArabic)
             
             print(iCharsArabic)
             
-            if (strLength < 1){
-                userOutput.text = ""
-                setCopyandPaste()
-            }
-            else{
-                
+//            if (strLength < 1){
+//                userOutput.text = ""
+//                setCopyandPaste()
+//            }
+//            else{
+            
                 // Awesome functions that filters out the nulls for me
                 iCharsArabic = iCharsArabic.filter{$0 != "\0"}
                 
@@ -129,18 +110,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 iCharsStringArr = iCharsString.components(separatedBy: " ")
                 print(iCharsString)
                 
-//                let iCharsArabicString = String(iCharsArabic)
-//                var wordArray = iCharsString.split(separator: " ")
-                
-//                let lastWord = Array(wordArray.last!)
+
                 let lastWord = Array(iCharsString)
                 
-//                if cursorOffset != strLength {
-//                    lastWord = Array (array[index])
-//                }
-                
                 (wordArr, wordArr2, wordArr3) = (lastWord, lastWord, lastWord)
-                
                 
                 // Filters out letters to be filtered
                 s = 0
@@ -165,13 +138,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.button2.title = String(wordArr2)
                 self.button3.title = String(wordArr3)
                 
-                
-                
         
 //                userOutput.text = String(iCharsStringArr.joined(separator: " "))
             }
             // Ends here
-        }
+//        }
     }
     
     // Disable the mid button when it's blank
@@ -203,12 +174,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
             UIPasteboard.general.string = userInput.text!
         }
         else{
-            tapped = "1"
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-            
+            var tempWord = Array(temp1[index-1])
+            print(temp)
+            print("with: \(temp1[index-1])")
+            print("last: \(userInputString)")
             //Keeps it from breaking
-            if index == temp1.count {
+            if spacePressed && tempWord.last == " "{
+                userInput.insertText(" ")
+            }
+            else if index == temp1.count {
                 if index == 0{index = 1}
                 if temp1.count != 0 { temp1.remove(at: (index-1))}
                 temp1.insert(Substring(String(wordArr)), at: (index-1))
@@ -232,8 +208,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
 
         else{
-            tapped = "1"
-            
             var temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
             
