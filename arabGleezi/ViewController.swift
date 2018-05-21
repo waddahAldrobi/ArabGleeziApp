@@ -54,7 +54,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         index = (Words.index(of: lastWordEdited))!
 
 //        print(lastWordEdited)
-          print(userInputString)
+//          print(userInputString)
 
 //        print ("index:  \(index as Any)")
 //        print ("count: \(Words.count)")
@@ -70,14 +70,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
         else if spacePressed{
             spacePressed = false
             
-//            if userInputString[userInputString.count - 1] == " "{
-                button1Tapped(self)
-//                userInput.insertText(" ")
+//            if userInputString[userInputString.count - 2] != " " {
+              button1Tapped(self)
 //            }
 //            else {
 //                userInput.insertText(" ")
 //            }
 //
+//            userInput.insertText(" ")
             print(cursorOffset)
             print(strLength)
         }
@@ -94,7 +94,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             
             translate (iCharsArabic: &iCharsArabic)
             
-            print(iCharsArabic)
+            print("icharsAra \(iCharsArabic)")
             
 //            if (strLength < 1){
 //                userOutput.text = ""
@@ -108,8 +108,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 // All the following is the predictive bar suggestions
                 iCharsString = String(iCharsArabic)
                 iCharsStringArr = iCharsString.components(separatedBy: " ")
-                print(iCharsString)
-                
+//                print("icharsStr \(iCharsString)")
+            
 
                 let lastWord = Array(iCharsString)
                 
@@ -176,26 +176,31 @@ class ViewController: UIViewController, UITextFieldDelegate {
         else{
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-            var tempWord = Array(temp1[index-1])
+//            var tempWord = Array(temp1[index-1])
             print(temp)
-            print("with: \(temp1[index-1])")
-            print("last: \(userInputString)")
+//            print("with: \(temp1[index-1])")
+            print("last: \(String(describing: userInputString))")
             //Keeps it from breaking
-            if spacePressed && tempWord.last == " "{
-                userInput.insertText(" ")
-            }
-            else if index == temp1.count {
+            //Figure out the space thing
+//            if userInputString.last == " "{
+////                userInput.insertText(" ")
+//                print("in1")
+//            }
+            if index == temp1.count {
+                print("in1000")
                 if index == 0{index = 1}
                 if temp1.count != 0 { temp1.remove(at: (index-1))}
                 temp1.insert(Substring(String(wordArr)), at: (index-1))
+                userInput.text = String(temp1.joined(separator: " "))
             }
             else {
+                print("in2")
                 if temp1.count != 0 { temp1.remove(at: (index))}
                 temp1.insert(Substring(String(wordArr)), at: (index))
+                userInput.text = String(temp1.joined(separator: " "))
             }
             
-            userInput.text = String(temp1.joined(separator: " "))
-            
+            userInput.insertText(" ")
         }
     }
     
