@@ -37,6 +37,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     var Words = [String]()
     var userInputString = [Character]()
+    
+    
+    var trial = ""
+    var newPosition = UITextPosition()
 
     
     @IBAction func isEditing(_ sender: Any) {
@@ -52,12 +56,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         Words = (substring?.components(separatedBy: " "))!
         lastWordEdited = (substring?.components(separatedBy: " ").last)!
         index = (Words.index(of: lastWordEdited))!
-
-//        print(lastWordEdited)
-//          print(userInputString)
-
-//        print ("index:  \(index as Any)")
-//        print ("count: \(Words.count)")
         
         array = userInput.text!.split(separator: " ")
         
@@ -96,11 +94,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
             
             print("icharsAra \(iCharsArabic)")
             
-//            if (strLength < 1){
-//                userOutput.text = ""
-//                setCopyandPaste()
-//            }
-//            else{
             
                 // Awesome functions that filters out the nulls for me
                 iCharsArabic = iCharsArabic.filter{$0 != "\0"}
@@ -108,8 +101,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 // All the following is the predictive bar suggestions
                 iCharsString = String(iCharsArabic)
                 iCharsStringArr = iCharsString.components(separatedBy: " ")
-//                print("icharsStr \(iCharsString)")
-            
 
                 let lastWord = Array(iCharsString)
                 
@@ -140,6 +131,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
         
 //                userOutput.text = String(iCharsStringArr.joined(separator: " "))
+            newPosition = (userInput.selectedTextRange?.end)!
+
+            if index == 0{index = 1}
+            trial = userInput.text!.replacingOccurrences(of: lastWordEdited, with: String(wordArr))
+            print("trial: \(trial)")
+            
+            userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
+            
+            userInput.text = trial
             }
             // Ends here
 //        }
@@ -176,31 +176,33 @@ class ViewController: UIViewController, UITextFieldDelegate {
         else{
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
-//            var tempWord = Array(temp1[index-1])
-            print(temp)
-//            print("with: \(temp1[index-1])")
-            print("last: \(String(describing: userInputString))")
+
             //Keeps it from breaking
             //Figure out the space thing
-//            if userInputString.last == " "{
-////                userInput.insertText(" ")
-//                print("in1")
-//            }
+            
+            var newPosition = userInput.selectedTextRange?.end
+//            print(userInput.selectedTextRange?.end)
+            
+
             if index == temp1.count {
-                print("in1000")
                 if index == 0{index = 1}
                 if temp1.count != 0 { temp1.remove(at: (index-1))}
                 temp1.insert(Substring(String(wordArr)), at: (index-1))
-                userInput.text = String(temp1.joined(separator: " "))
+//                userInput.text = String(temp1.joined(separator: " "))
             }
             else {
-                print("in2")
                 if temp1.count != 0 { temp1.remove(at: (index))}
                 temp1.insert(Substring(String(wordArr)), at: (index))
-                userInput.text = String(temp1.joined(separator: " "))
+//                userInput.text = String(temp1.joined(separator: " "))
             }
             
-            userInput.insertText(" ")
+            
+            userInput.selectedTextRange = userInput.textRange(from: newPosition!, to: newPosition!)
+            
+//            userInput.text = trial
+
+            
+//            userInput.insertText(" ")
         }
     }
     
