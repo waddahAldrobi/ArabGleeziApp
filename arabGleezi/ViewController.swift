@@ -131,15 +131,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
         
 //                userOutput.text = String(iCharsStringArr.joined(separator: " "))
-            newPosition = (userInput.selectedTextRange?.end)!
 
-            if index == 0{index = 1}
-            trial = userInput.text!.replacingOccurrences(of: lastWordEdited, with: String(wordArr))
-            print("trial: \(trial)")
-            
-            userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
-            
-            userInput.text = trial
             }
             // Ends here
 //        }
@@ -161,6 +153,34 @@ class ViewController: UIViewController, UITextFieldDelegate {
             print("SpaceBar is pressed")
             spacePressed = true
         }
+        
+        var beginning: UITextPosition? = textField.beginningOfDocument
+        var cursorLocation: UITextPosition? = nil
+        if let aBeginning = beginning {
+            cursorLocation = textField.position(from: aBeginning, offset: range.location + string.count-1)
+        }
+        
+        print("string: \(string)")
+        
+//        textField.text = textField.text!.replacingCharacters(in:Range(range, in:textField.text!)! , with: string)
+
+        /* MAKE YOUR CHANGES TO THE FIELD CONTENTS AS NEEDED HERE */
+//        newPosition = (userInput.selectedTextRange?.end)!
+         trial = userInput.text!.replacingOccurrences(of: lastWordEdited, with: String(wordArr))
+//        print("trial: \(trial)")
+        
+//        userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
+        
+        userInput.text = trial
+        
+        // cursorLocation will be (null) if you're inputting text at the end of the string
+        // if already at the end, no need to change location as it will default to end anyway
+        if cursorLocation != nil {
+            if let aLocation = cursorLocation {
+                userInput.selectedTextRange = textField.textRange(from: aLocation, to: aLocation)
+            }
+        }
+        
         return true
     }
     
@@ -177,32 +197,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
             var temp = userInput.text! as String        //
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
 
-            //Keeps it from breaking
-            //Figure out the space thing
-            
-            var newPosition = userInput.selectedTextRange?.end
-//            print(userInput.selectedTextRange?.end)
-            
-
             if index == temp1.count {
                 if index == 0{index = 1}
                 if temp1.count != 0 { temp1.remove(at: (index-1))}
                 temp1.insert(Substring(String(wordArr)), at: (index-1))
-//                userInput.text = String(temp1.joined(separator: " "))
             }
             else {
                 if temp1.count != 0 { temp1.remove(at: (index))}
                 temp1.insert(Substring(String(wordArr)), at: (index))
-//                userInput.text = String(temp1.joined(separator: " "))
             }
-            
-            
-            userInput.selectedTextRange = userInput.textRange(from: newPosition!, to: newPosition!)
-            
-//            userInput.text = trial
-
-            
-//            userInput.insertText(" ")
         }
     }
     
@@ -321,6 +324,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                     if iCharsArabic[i] != "'"{iCharsArabic[i-1] = "\0"}
+                    
+                    
                 }
                 
             case "e" :
