@@ -68,14 +68,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         else if spacePressed{
             spacePressed = false
             
-//            if userInputString[userInputString.count - 2] != " " {
-              button1Tapped(self)
-//            }
-//            else {
-//                userInput.insertText(" ")
-//            }
-//
-//            userInput.insertText(" ")
+//            button1Tapped(self)
+
             print(cursorOffset)
             print(strLength)
         }
@@ -148,28 +142,32 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if string == " " {
-            //Run your function here
-            print("SpaceBar is pressed")
-            spacePressed = true
+//        if string == " " {
+//            //Run your function here
+//            print("SpaceBar is pressed")
+//            spacePressed = true
+//        }
+        
+        let  char = string.cString(using: String.Encoding.utf8)!
+        let isBackSpace = strcmp(char, "\\b")
+        
+        if (isBackSpace == -92 ) {
+            print("Backspace was pressed")
         }
+        else{
         
         var beginning: UITextPosition? = textField.beginningOfDocument
         var cursorLocation: UITextPosition? = nil
         if let aBeginning = beginning {
             cursorLocation = textField.position(from: aBeginning, offset: range.location + string.count-1)
+//            if string == " " {
+//                cursorLocation = textField.position(from: aBeginning, offset: range.location + string.count)
+//            }
         }
         
         print("string: \(string)")
         
-//        textField.text = textField.text!.replacingCharacters(in:Range(range, in:textField.text!)! , with: string)
-
-        /* MAKE YOUR CHANGES TO THE FIELD CONTENTS AS NEEDED HERE */
-//        newPosition = (userInput.selectedTextRange?.end)!
          trial = userInput.text!.replacingOccurrences(of: lastWordEdited, with: String(wordArr))
-//        print("trial: \(trial)")
-        
-//        userInput.selectedTextRange = userInput.textRange(from: newPosition, to: newPosition)
         
         userInput.text = trial
         
@@ -179,6 +177,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             if let aLocation = cursorLocation {
                 userInput.selectedTextRange = textField.textRange(from: aLocation, to: aLocation)
             }
+        }
         }
         
         return true
