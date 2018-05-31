@@ -42,6 +42,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var trial = ""
     var newPosition = UITextPosition()
     
+    var trialRange = NSRange()
+    
     
     @IBAction func isEditing(_ sender: Any) {
         userInput.makeTextWritingDirectionRightToLeft((Any).self)
@@ -148,6 +150,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         //            spacePressed = true
         //        }
         
+        trialRange = range
+        
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         
@@ -227,7 +231,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
             var temp = userInput.text! as String
             var temp1 = temp.split(separator: " ")      // These lines take the last word t
             
+            var beginning: UITextPosition? = userInput.beginningOfDocument
+            var cursorLocation: UITextPosition? = nil
+            if let aBeginning = beginning {
+                cursorLocation = userInput.position(from: aBeginning, offset: trialRange.location+1 /*+ string.count-1*/)
+//                if userInput.text!.count > 0 && iCharsArabic.last == "\0"{
+//                    print ("in")
+//                    cursorLocation = userInput.position(from: aBeginning, offset: trialRange.location - 1)
+//                }
+            }
+            
             print ("temp1: \(temp1.count)")
+            
             
             if index == temp1.count {
                 print("here1")
@@ -243,6 +258,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
             
             userInput.text = String(temp1.joined(separator: " "))
             spacePressed = false
+            
+            if cursorLocation != nil {
+                if let aLocation = cursorLocation {
+                    userInput.selectedTextRange = userInput.textRange(from: aLocation, to: aLocation)
+                }
+            }
             
         }
     }
@@ -352,22 +373,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 if(i>0){
                     switch iCharsArabic[i-1] {
                     // the 3een doesnt seem right
-                    case "ع","و" :iCharsArabic[i] = "و"
+                    case "ع","و" :iCharsArabic[i-1] = "و"
                     default: iCharsArabic[i] = "ع"
                     }
                     
-                    if iCharsArabic[i] != "ع" {iCharsArabic[i-1] = "\0"}
+                    if iCharsArabic[i] != "ع" {iCharsArabic[i] = "\0"}
                 }
                 else{ iCharsArabic[i] = "ع" }
                 
             case "u" :
                 if(i>0){
                     switch iCharsArabic[i-1] {
-                    case "و" : iCharsArabic[i] = "و"
+                    case "و" : iCharsArabic[i-1] = "و"
                     default: iCharsArabic[i] = "و"
                     }
                     
-                    if iCharsArabic[i] != "و" {iCharsArabic[i-1] = "\0"}
+                    if iCharsArabic[i] != "و" {iCharsArabic[i] = "\0"}
                 }
                 else{iCharsArabic[i] = "و"}
                 
