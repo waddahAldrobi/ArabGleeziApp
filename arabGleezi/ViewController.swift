@@ -43,6 +43,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var newPosition = UITextPosition()
     
     var trialRange = NSRange()
+    var trialString = String()
     
     
     @IBAction func isEditing(_ sender: Any) {
@@ -126,7 +127,44 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.button3.title = String(wordArr3)
             
             
-            //                userOutput.text = String(iCharsStringArr.joined(separator: " "))
+            let  char = trialString.cString(using: String.Encoding.utf8)!
+            let isBackSpace = strcmp(char, "\\b")
+            
+            if (isBackSpace == -92 ) {
+                print("Backspace was pressed")
+            }
+            else{
+                
+                var beginning: UITextPosition? = userInput.beginningOfDocument
+                var cursorLocation: UITextPosition? = nil
+                if let aBeginning = beginning {
+                    cursorLocation = userInput.position(from: aBeginning, offset: trialRange.location+1 /*+ string.count-1*/)
+                    print("icharLast \(iCharsArabic.last)")
+                    if userInput.text!.count > 0 && iCharsArabic.last == "\0"{
+                        print ("in")
+                        cursorLocation = userInput.position(from: aBeginning, offset: trialRange.location)
+                    }
+                }
+                
+                
+                //        print("string count: \(string.count)")
+                //        print("input count: \(userInput.text!.count)")
+
+                trial = userInput.text!.replacingOccurrences(of: lastWordEdited, with: String(wordArr))
+                
+                print("trial: \(Array(trial))")
+                
+                
+                userInput.text = trial
+                
+                // cursorLocation will be (null) if you're inputting text at the end of the string
+                // if already at the end, no need to change location as it will default to end anyway
+                if cursorLocation != nil {
+                    if let aLocation = cursorLocation {
+                        userInput.selectedTextRange = userInput.textRange(from: aLocation, to: aLocation)
+                    }
+                }
+            }
             
         }
         // Ends here
@@ -144,52 +182,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        //        if string == " " {
-        //            //Run your function here
-        //            print("SpaceBar is pressed")
-        //            spacePressed = true
-        //        }
+                if string == " " {
+                    //Run your function here
+                    print("SpaceBar is pressed")
+                    spacePressed = true
+                }
         
         trialRange = range
+        trialString = string
         
-        let  char = string.cString(using: String.Encoding.utf8)!
-        let isBackSpace = strcmp(char, "\\b")
         
-        if (isBackSpace == -92 ) {
-            print("Backspace was pressed")
-        }
-        else{
-            
-            var beginning: UITextPosition? = textField.beginningOfDocument
-            var cursorLocation: UITextPosition? = nil
-            if let aBeginning = beginning {
-                cursorLocation = textField.position(from: aBeginning, offset: range.location /*+ string.count-1*/)
-                print("icharLast \(iCharsArabic.last)")
-                if userInput.text!.count > 0 && iCharsArabic.last == "\0"{
-                    print ("in")
-                    cursorLocation = textField.position(from: aBeginning, offset: range.location - 1)
-                }
-            }
-            
-            
-            //        print("string count: \(string.count)")
-            //        print("input count: \(userInput.text!.count)")
-            
-            trial = userInput.text!.replacingOccurrences(of: lastWordEdited, with: String(wordArr))
-            
-            print("trial: \(Array(trial))")
-            
-            
-            userInput.text = trial
-            
-            // cursorLocation will be (null) if you're inputting text at the end of the string
-            // if already at the end, no need to change location as it will default to end anyway
-            if cursorLocation != nil {
-                if let aLocation = cursorLocation {
-                    userInput.selectedTextRange = textField.textRange(from: aLocation, to: aLocation)
-                }
-            }
-        }
         
         return true
     }
@@ -336,7 +338,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     default: iCharsArabic[i] = "ه"
                     }
                     
-                    if iCharsArabic[i-1] != "ه"{iCharsArabic[i] = "\0"}
+                    if iCharsArabic[i] != "ه"{iCharsArabic[i] = "\0"}
                 }
                     
                 else{ iCharsArabic[i] = "ه"} // ## e,ah and eh , maybe a
@@ -348,6 +350,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     case "ع" :iCharsArabic[i-1] = "غ"
                     case "ص" :iCharsArabic[i-1] = "ض"
                     case "ط" :iCharsArabic[i-1] = "ظ"
+                    
                     default: iCharsArabic[i] = "'"
                     }
                     
@@ -396,8 +399,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
             }
             
-            // In the case of duplicates
-            if (i>0 && iCharsArabic[i-1]==iCharsArabic[i]){
+            //In the case of duplicates
+            if (i>0 && iCharsArabic[i-1]==iCharsArabic[i] && iCharsArabic[i] != "ل" ){
                 iCharsArabic[i]=="e" ? iCharsArabic[i-1] = "ي" : nil
                 
                 iCharsArabic[i] = "\0"
